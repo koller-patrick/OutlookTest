@@ -1,24 +1,21 @@
-using System.Text.Json.Serialization;
+var builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateSlimBuilder(args);
-
-builder.Services.ConfigureHttpJsonOptions(options =>
+builder.Services.AddCors(options =>
 {
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+    options.AddPolicy("AllowAnyOriginPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();
 
+app.UseCors("AllowAnyOriginPolicy");
+
+app.UseHttpsRedirection();
 
 app.Map("/api/signature", () => Results.Ok("<p>Signature <b>Test</b></p>"));
 
-
 app.Run();
-
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
-
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-
-}

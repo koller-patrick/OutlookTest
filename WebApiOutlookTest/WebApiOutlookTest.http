@@ -1,11 +1,6 @@
-@WebApiOutlookTest_HostAddress = http://localhost:5101
+@WebApiOutlookTest_HostAddress = http://localhost:5154
 
-GET {{WebApiOutlookTest_HostAddress}}/todos/
-Accept: application/json
-
-###
-
-GET {{WebApiOutlookTest_HostAddress}}/todos/1
+GET {{WebApiOutlookTest_HostAddress}}/api/signature
 Accept: application/json
 
 ###

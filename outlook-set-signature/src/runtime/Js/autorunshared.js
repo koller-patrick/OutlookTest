@@ -11,8 +11,51 @@
  * @returns
  */
 function checkSignature(eventObj) {
+  const xhr = new XMLHttpRequest();
+    const url = "https://localhost:7149/api/signature";
 
-  fetch("http://localhost:5101/api/signature")
+    xhr.open("GET", url, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            Office.context.mailbox.item.body.setAsync(
+                xhr.responseText,
+                {
+                    coercionType: "html",
+                },
+                function (asyncResult) {
+                    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+                        console.error(JSON.stringify(asyncResult.error));
+                    }
+
+                    asyncResult.asyncContext.completed();
+                }
+            );
+        } else {
+            // Handle errors or other status codes here
+            console.error("Error:", xhr.status, xhr.statusText);
+
+            Office.context.mailbox.item.body.setAsync(
+                "Error: " + JSON.stringify(xhr),
+                {
+                    coercionType: "html",
+                },
+                function (asyncResult) {
+                    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+                        console.error(JSON.stringify(asyncResult.error));
+                    }
+
+                    asyncResult.asyncContext.completed();
+                }
+            );
+        }
+    };
+
+    // Send the request
+    xhr.send();
+
+    /*
+  fetch("https://localhost:7149/api/signature")
         .then(async (response) => {
             const signature = await response.text();
             Office.context.mailbox.item.body.setSignatureAsync(
@@ -43,6 +86,7 @@ function checkSignature(eventObj) {
                 }
             );
         });
+        */
 }
 
 /**
