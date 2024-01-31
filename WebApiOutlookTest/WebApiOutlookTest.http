@@ -1,0 +1,11 @@
+@WebApiOutlookTest_HostAddress = http://localhost:5101
+
+GET {{WebApiOutlookTest_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{WebApiOutlookTest_HostAddress}}/todos/1
+Accept: application/json
+
+###
